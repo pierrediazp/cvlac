@@ -565,6 +565,32 @@ def inspeccionar_trabajo_html(soup, numero=1):
     print(work := trabajo.prettify())
  
  
+def extraer_datos_generales(soup):
+    ancla = soup.find("a", attrs={"name": "datos_generales"})
+
+    if ancla is None:
+        return {}
+
+    tabla = ancla.find_next("table")
+
+    if tabla is None:
+        return {}
+
+    datos = {}
+
+    for fila in tabla.find_all("tr"):
+        celdas = fila.find_all("td")
+
+        if len(celdas) < 2:
+            continue
+
+        etiqueta = celdas[0].get_text(" ", strip=True)
+        valor = celdas[1].get_text(" ", strip=True)
+
+        if etiqueta:
+            datos[etiqueta] = valor
+
+    return datos
  
  
  
